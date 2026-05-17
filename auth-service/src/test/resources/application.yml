@@ -3,3 +3,9 @@ spring:
     mongodb:
       database: piggymetrics
       port: 0
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 7.0.14
