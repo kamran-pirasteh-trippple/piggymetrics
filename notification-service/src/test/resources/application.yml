@@ -11,11 +11,21 @@ backup:
     subject: PiggyMetrics account backup
     attachment: backup.json
 
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 7.0.9
+
 spring:
   data:
     mongodb:
       database: piggymetrics
-      port: 0
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          public-key-location: classpath:test-public-key.pem
   mail:
     host: smtp.gmail.com
     port: 465
