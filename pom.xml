@@ -21,6 +21,15 @@
 		<java.version>17</java.version>
 	</properties>
 
+	<dependencies>
+		<!-- Since Spring Cloud 2020.0, bootstrap context is disabled by default.
+		     All services use bootstrap.yml for config-server connection settings. -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+	</dependencies>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
