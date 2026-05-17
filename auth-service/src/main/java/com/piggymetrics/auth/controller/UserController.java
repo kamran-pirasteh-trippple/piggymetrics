@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.security.Principal;
 
 @RestController
@@ -24,7 +24,7 @@ public class UserController {
 		return principal;
 	}
 
-	@PreAuthorize("#oauth2.hasScope('server')")
+	@PreAuthorize("hasAuthority('SCOPE_server')")
 	@RequestMapping(method = RequestMethod.POST)
 	public void createUser(@Valid @RequestBody User user) {
 		userService.create(user);
