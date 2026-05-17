@@ -4,19 +4,22 @@ import com.piggymetrics.account.client.AuthServiceClient;
 import com.piggymetrics.account.client.StatisticsServiceClient;
 import com.piggymetrics.account.domain.*;
 import com.piggymetrics.account.repository.AccountRepository;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 
+@ExtendWith(MockitoExtension.class)
 public class AccountServiceTest {
 
 	@InjectMocks
@@ -31,26 +34,21 @@ public class AccountServiceTest {
 	@Mock
 	private AccountRepository repository;
 
-	@Before
-	public void setup() {
-		initMocks(this);
-	}
-
 	@Test
 	public void shouldFindByName() {
 
 		final Account account = new Account();
 		account.setName("test");
 
-		when(accountService.findByName(account.getName())).thenReturn(account);
+		when(repository.findByName(account.getName())).thenReturn(account);
 		Account found = accountService.findByName(account.getName());
 
 		assertEquals(account, found);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void shouldFailWhenNameIsEmpty() {
-		accountService.findByName("");
+		assertThrows(IllegalArgumentException.class, () -> accountService.findByName(""));
 	}
 
 	@Test
@@ -106,7 +104,7 @@ public class AccountServiceTest {
 
 		final Account account = new Account();
 
-		when(accountService.findByName("test")).thenReturn(account);
+		when(repository.findByName("test")).thenReturn(account);
 		accountService.saveChanges("test", update);
 
 		assertEquals(update.getNote(), account.getNote());
@@ -137,13 +135,13 @@ public class AccountServiceTest {
 		verify(statisticsClient, times(1)).updateStatistics("test", account);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void shouldFailWhenNoAccountsExistedWithGivenName() {
 		final Account update = new Account();
 		update.setIncomes(Arrays.asList(new Item()));
 		update.setExpenses(Arrays.asList(new Item()));
 
-		when(accountService.findByName("test")).thenReturn(null);
-		accountService.saveChanges("test", update);
+		when(repository.findByName("test")).thenReturn(null);
+		assertThrows(IllegalArgumentException.class, () -> accountService.saveChanges("test", update));
 	}
 }
